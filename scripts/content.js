@@ -3,34 +3,33 @@ var styleElement = document.createElement("style");
 styleElement.textContent = `
   .dictionaryPopup {
 		display: none;
-    width: 300px;
+    	width: 300px;
 		height: 230px;
 		position: absolute;
-		
 		border: 1px solid #ddd;
-  	border-radius: 4px;
-  	box-shadow: 0 30px 90px -20px rgba(0,0,0,0.3), 0 0 1px 1px rgba(0,0,0,0.05);
-  	background-color: #f7f7f7;
-		z-index: 999;
-		padding: 10px 12px;
+  		border-radius: 4px;
+  		box-shadow: 0 30px 90px -20px rgba(0,0,0,0.3), 0 0 1px 1px rgba(0,0,0,0.05);
+  		background-color: #f7f7f7 !important;
+		z-index: 10000;
+		padding: 10px 12px !important;
   }
 	.dictionaryPopupHeader {
-		font-size: 16px;
-		line-height: 20px;
+		font-size: 16px !important;
+		line-height: 20px !important;
 		width: 100%;
-		letter-spacing: 0.5px;
-		color: #202122;
+		letter-spacing: 0.5px !important;
+		color: #202122 !important;
 	}
 	.meaningContainer {
-		border: 1px solid #ddd;
-  	border-radius: 4px;
-		background-color: #fff;
-		margin-top: 10px;
-		padding: 7px;
-		height: 80%;
-		overflow: scroll;
-		font-size: 13px;
-		font-weight: 500;
+		border: 1px solid #ddd !important;
+  		border-radius: 4px !important;
+		background-color: #fff !important;
+		margin-top: 10px !important;
+		padding: 7px !important;
+		height: 80% !important;
+		overflow: scroll !important;
+		font-size: 13px !important;
+		font-weight: 500 !important;
 	}
 	.dictionaryPopupBottom {
 		width: 100%;
@@ -40,7 +39,7 @@ styleElement.textContent = `
 	}
 	.saveBtn {
 		font-size: 12px;
-    cursor: pointer;
+    	cursor: pointer;
 		color: #666666;
 		border: 1px solid #b2b2b2;
 		border-radius: 1px;
@@ -51,12 +50,19 @@ styleElement.textContent = `
 		background-color: #f5f5f56b;
 	}
 	.wordElement {
-		font-size: 14px;
-		font-weight: 700;
+		font-size: 14px !important;
+		font-weight: 700 !important;
+		color: #1b1b1b !important;
+	}
+	.meaningContainer p {
+		color: #1b1b1b !important;
+		line-height: 15px !important;
+		margin-top: 7px  !important;
+		margin-bottom: 7px  !important;
 	}
 	.hDivider {
 		width: 100%;
-		height: 1px;
+		height: 1.5px;
 		background-color: #eee;
 	}
 	.audioPlayer {
@@ -65,15 +71,18 @@ styleElement.textContent = `
 		border-radius: 50%;
 		background-color: grey;
 	}
-	::-webkit-scrollbar {
- 		width: 4px; /* Set the width of the scrollbar */
+	.meaningContainer::-webkit-scrollbar {
+ 		width: 4px !important; /* Set the width of the scrollbar */
 	}
-	::-webkit-scrollbar-thumb {
-  	background-color: #cccccc; /* Set the color of the thumb */
-  	border-radius: 6px; /* Optional: Set the border-radius of the thumb */
+	.meaningContainer::-webkit-scrollbar-thumb {
+  		background-color: #cccccc !important; /* Set the color of the thumb */
+  		border-radius: 6px !important; /* Optional: Set the border-radius of the thumb */
 	}
-	::-webkit-scrollbar-track {
-  	background-color: #fff; /* Set the color of the track */
+	.meaningContainer::-webkit-scrollbar-track {
+  		background-color: #fff !important; /* Set the color of the track */
+	}
+	.f-italics {
+		font-style: italic;
 	}
 `;
 document.head.appendChild(styleElement);
@@ -92,17 +101,11 @@ function createElement(elementType, attributesObject, classesArray) {
 	}
 	return elem;
 }
-var dictionaryPopup = createElement("div", { id: "dictionaryCardID" }, [
-	"dictionaryPopup",
-]); //Outermost div for dictionary popup
-var dictionaryPopupHeader = createElement(
-	"div",
-	{ id: "dictionaryPopupHeaderID", textContent: "Dictionary" },
-	["dictionaryPopupHeader"]
-); //Div for header of the popup
-var meaningContainer = createElement("div", { id: "meaningContainerID" }, [
-	"meaningContainer",
-]); // Div container for meaning
+var dictionaryPopup = createElement("div", { id: "dictionaryCardID" }, ["dictionaryPopup"]); //Outermost div for dictionary popup
+var dictionaryPopupHeader = createElement("div", { id: "dictionaryPopupHeaderID", textContent: "Dictionary" }, [
+	"dictionaryPopupHeader",
+]); //Div for header of the popup
+var meaningContainer = createElement("div", { id: "meaningContainerID" }, ["meaningContainer"]); // Div container for meaning
 var hDivider = createElement("div", {}, ["hDivider"]); // Div which acts as a horizontal divider
 dictionaryPopup.appendChild(dictionaryPopupHeader);
 dictionaryPopup.appendChild(meaningContainer);
@@ -149,79 +152,32 @@ document.body.appendChild(dictionaryPopup);
 // 	}
 // });
 
-function populateMeaning(meaningData) {
-	const meaningObj = meaningData[0];
-	let wordElement = document.createElement("p");
-	wordElement.classList.add("wordElement");
-	wordElement.textContent = meaningObj.word;
-	meaningContainer.appendChild(wordElement);
-	// for (let phonetic of meaningObj.phonetics) {
-	// 	if (phonetic.audio && phonetic.audio.includes("mp3")) {
-	// 		sourceElem.src = phonetic.audio;
-	// 		audioSrc = phonetic.audio;
-	// 	}
-	// }
-	//meaningContainer.appendChild(audioPlayer);
-	let count = 0;
-	for (let meaning of meaningObj.meanings) {
-		count++;
-		console.log(meaning);
-		console.log("*********************************");
-		meaningContainer.appendChild(hDivider);
-		let partOfSpeech = document.createElement("p");
-		partOfSpeech.textContent = meaning.partOfSpeech;
-		meaningContainer.appendChild(partOfSpeech);
-		let meaningNumber = 0;
-		for (let definition of meaning.definitions) {
-			meaningNumber++;
-			let meaningOfWord = document.createElement("p");
-			meaningOfWord.textContent =
-				meaningNumber + ". " + definition.definition;
-			meaningContainer.appendChild(meaningOfWord);
-		}
-	}
-	console.log("counter: " + count);
-}
-function populateNoMeaningFound(selectedText) {
-	console.log("populateNoMeaningFound called..");
-	let wordElement = document.createElement("p");
-	wordElement.classList.add("wordElement");
-	wordElement.textContent = selectedText;
-	meaningContainer.appendChild(wordElement);
-	meaningContainer.appendChild(hDivider);
-	let noMeaningFoundMsg = document.createElement("p");
-	noMeaningFoundMsg.textContent = "No definitions found.";
-	meaningContainer.appendChild(noMeaningFoundMsg);
-}
-
 let dblClickEventHappend = false;
 
 function dblClickEventHandler(event) {
 	console.log("dblClickEventHandler called +++++++++++++++++++++");
 	dblClickEventHappend = true;
-	docClickHandler(event);
+	fetchMeaningOfSelected(event);
 	setTimeout(() => {
 		dblClickEventHappend = false;
-	}, 1500);
+	}, 1000);
 }
 
 function mouseUpEventHandler(event) {
 	console.log("mouseUpEventHandler called +++++++++++++++++++++");
 	setTimeout(() => {
 		if (!dblClickEventHappend) {
-			docClickHandler(event);
+			fetchMeaningOfSelected(event);
 		}
-	}, 2000);
+	}, 500);
 }
-function docClickHandler(event) {
-	console.log("-------------------docClickHandler------------------");
+function fetchMeaningOfSelected(event) {
+	console.log("-------------------fetchMeaningOfSelected------------------");
 	console.log(event);
 	let selectedText = getSelectedText();
+	console.log("selected text: ", selectedText);
 	if (selectedText.trim().length !== 0) {
-		fetch(
-			"https://api.dictionaryapi.dev/api/v2/entries/en/" +
-				selectedText.trim()
-		)
+		fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + selectedText.trim())
 			.then((response) => {
 				// Check if the request was successful (status code in the range 200-299)
 				if (!response.ok) {
@@ -235,7 +191,6 @@ function docClickHandler(event) {
 				console.log("Data in content.js file: ", respData);
 				//			chrome.runtime.sendMessage({ data: respData });
 				showMeaningPopup(event);
-				console.log("this is calling this is calling this is calling");
 				populateMeaning(respData);
 			})
 			.catch((error) => {
@@ -258,15 +213,7 @@ function getSelectedText() {
 function showMeaningPopup(event) {
 	let x = event.pageX - 150;
 	let y = event.pageY - 290;
-	console.log("++++++++++++++++++++++++++");
-	console.log(x + " " + y);
-	console.log("++++++++++++++++++++++++++");
-	// const viewportWidth = window.innerWidth;
-	// const viewportHeight = window.innerHeight;
-	// console.log(`Viewport Width: ${viewportWidth}px`);
-	// console.log(`Viewport Height: ${viewportHeight}px`);
 	const triggerY = event.clientY - 230 - 60;
-	console.log(`trigger Y: ${triggerY}`);
 	//handling if popup is overflowing out of top
 	if (triggerY < 0) {
 		y = y - triggerY;
@@ -282,17 +229,61 @@ function showMeaningPopup(event) {
 	}
 	//handling if popup is overflowing out of right
 	const triggerX = event.clientX + 150;
-	console.log(`trigger X: ${triggerX}`);
-	console.log("inner width: " + window.innerWidth);
 	if (triggerX > window.innerWidth) {
 		x = x - 150;
 	}
-	console.log(y);
-	console.log(x);
 	dictionaryPopup.style.left = x + "px";
 	dictionaryPopup.style.top = y + "px";
 	dictionaryPopup.style.display = "block";
 }
+
+function populateMeaning(meaningData) {
+	const meaningObj = meaningData[0];
+	let wordElement = createElement("p", { textContent: meaningObj.word }, ["wordElement"]);
+	meaningContainer.appendChild(wordElement);
+	// for (let phonetic of meaningObj.phonetics) {
+	// 	if (phonetic.audio && phonetic.audio.includes("mp3")) {
+	// 		sourceElem.src = phonetic.audio;
+	// 		audioSrc = phonetic.audio;
+	// 	}
+	// }
+	//meaningContainer.appendChild(audioPlayer);
+	let count = 0;
+	for (let meaning of meaningObj.meanings) {
+		console.log(meaning);
+		console.log("meaning " + count + "*********************************");
+		const clonedHDividerNode = hDivider.cloneNode(true); // true parameter clones all descendants as well
+		console.log(clonedHDividerNode);
+		if (count > 0) {
+			meaningContainer.appendChild(clonedHDividerNode);
+		}
+
+		let partOfSpeech = createElement("p", { textContent: meaning.partOfSpeech }, ["f-italics"]);
+		meaningContainer.appendChild(partOfSpeech);
+		let meaningNumber = 0;
+		for (let definition of meaning.definitions) {
+			meaningNumber++;
+			let meaningOfWord = document.createElement("p");
+			meaningOfWord.textContent = meaningNumber + ". " + definition.definition;
+			meaningContainer.appendChild(meaningOfWord);
+		}
+		console.log(meaningContainer);
+		count++;
+	}
+}
+function populateNoMeaningFound(selectedText) {
+	console.log("populateNoMeaningFound called..");
+	let wordElement = createElement("p", { textContent: selectedText }, ["wordElement"]);
+	// let wordElement = document.createElement("p");
+	// wordElement.classList.add("wordElement");
+	// wordElement.textContent = selectedText;
+	meaningContainer.appendChild(wordElement);
+	meaningContainer.appendChild(hDivider);
+	let noMeaningFoundMsg = document.createElement("p");
+	noMeaningFoundMsg.textContent = "No definitions found.";
+	meaningContainer.appendChild(noMeaningFoundMsg);
+}
+
 function onSingleClick() {
 	console.log("on single click");
 	var meaningDiv = document.getElementById("dictionaryCardID");
