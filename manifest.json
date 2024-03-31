@@ -13,5 +13,11 @@
 	"action": {
 		"default_popup": "popup.html",
 		"default_icon": "dictionary_icon.png"
-	}
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["popup.js"],
+			"matches": ["https://web-accessible-resources-1.glitch.me/*"]
+		}
+	]
 }

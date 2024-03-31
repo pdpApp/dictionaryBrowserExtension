@@ -85,6 +85,33 @@ styleElement.textContent = `
 		font-style: italic;
 	}
 `;
+
+let isDblClickEnabled = true;
+let isMouseSelectionEnabled = true;
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+	console.log("in listner");
+	if (message.variable1) {
+		var receivedVariable = message.variable1;
+		console.log("Received variable from popup:", receivedVariable);
+		// Do something with receivedVariable
+	}
+	if (message.isDblClickEnable) {
+		console.log("dbl click true");
+		isDblClickEnabled = true;
+	} else {
+		console.log("dbl click false");
+		isDblClickEnabled = false;
+	}
+	if (message.isMouseSelectionEnable) {
+		console.log("isMouseSelectionEnable  true");
+		isMouseSelectionEnabled = true;
+	} else {
+		console.log("isMouseSelectionEnable false");
+		isMouseSelectionEnabled = false;
+	}
+});
+
 document.head.appendChild(styleElement);
 function createElement(elementType, attributesObject, classesArray) {
 	var elem = document.createElement(elementType);
@@ -155,7 +182,9 @@ let dblClickEventHappend = false;
 
 function dblClickEventHandler(event) {
 	dblClickEventHappend = true;
-	fetchMeaningOfSelected(event);
+	if (isDblClickEnabled) {
+		fetchMeaningOfSelected(event);
+	}
 	setTimeout(() => {
 		dblClickEventHappend = false;
 	}, 1000);
@@ -163,7 +192,7 @@ function dblClickEventHandler(event) {
 
 function mouseUpEventHandler(event) {
 	setTimeout(() => {
-		if (!dblClickEventHappend) {
+		if (!dblClickEventHappend && isMouseSelectionEnabled) {
 			fetchMeaningOfSelected(event);
 		}
 	}, 500);
