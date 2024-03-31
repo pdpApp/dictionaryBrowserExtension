@@ -91,7 +91,6 @@ function createElement(elementType, attributesObject, classesArray) {
 	//adds attributes to the created element
 	for (const attr in attributesObject) {
 		if (attributesObject.hasOwnProperty(attr)) {
-			console.log(attributesObject[attr]);
 			elem[attr] = attributesObject[attr];
 		}
 	}
@@ -155,7 +154,6 @@ document.body.appendChild(dictionaryPopup);
 let dblClickEventHappend = false;
 
 function dblClickEventHandler(event) {
-	console.log("dblClickEventHandler called +++++++++++++++++++++");
 	dblClickEventHappend = true;
 	fetchMeaningOfSelected(event);
 	setTimeout(() => {
@@ -164,7 +162,6 @@ function dblClickEventHandler(event) {
 }
 
 function mouseUpEventHandler(event) {
-	console.log("mouseUpEventHandler called +++++++++++++++++++++");
 	setTimeout(() => {
 		if (!dblClickEventHappend) {
 			fetchMeaningOfSelected(event);
@@ -172,10 +169,7 @@ function mouseUpEventHandler(event) {
 	}, 500);
 }
 function fetchMeaningOfSelected(event) {
-	console.log("-------------------fetchMeaningOfSelected------------------");
-	console.log(event);
 	let selectedText = getSelectedText();
-	console.log("selected text: ", selectedText);
 	if (selectedText.trim().length !== 0) {
 		fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + selectedText.trim())
 			.then((response) => {
@@ -188,14 +182,10 @@ function fetchMeaningOfSelected(event) {
 			})
 			.then((respData) => {
 				// Process the JSON respData
-				console.log("Data in content.js file: ", respData);
-				//			chrome.runtime.sendMessage({ data: respData });
 				showMeaningPopup(event);
 				populateMeaning(respData);
 			})
 			.catch((error) => {
-				console.log(error.message);
-				console.log(selectedText);
 				showMeaningPopup(event);
 				populateNoMeaningFound(selectedText);
 			});
@@ -250,10 +240,7 @@ function populateMeaning(meaningData) {
 	//meaningContainer.appendChild(audioPlayer);
 	let count = 0;
 	for (let meaning of meaningObj.meanings) {
-		console.log(meaning);
-		console.log("meaning " + count + "*********************************");
 		const clonedHDividerNode = hDivider.cloneNode(true); // true parameter clones all descendants as well
-		console.log(clonedHDividerNode);
 		if (count > 0) {
 			meaningContainer.appendChild(clonedHDividerNode);
 		}
@@ -267,16 +254,12 @@ function populateMeaning(meaningData) {
 			meaningOfWord.textContent = meaningNumber + ". " + definition.definition;
 			meaningContainer.appendChild(meaningOfWord);
 		}
-		console.log(meaningContainer);
 		count++;
 	}
+	meaningContainer.scrollTop = 0;
 }
 function populateNoMeaningFound(selectedText) {
-	console.log("populateNoMeaningFound called..");
 	let wordElement = createElement("p", { textContent: selectedText }, ["wordElement"]);
-	// let wordElement = document.createElement("p");
-	// wordElement.classList.add("wordElement");
-	// wordElement.textContent = selectedText;
 	meaningContainer.appendChild(wordElement);
 	meaningContainer.appendChild(hDivider);
 	let noMeaningFoundMsg = document.createElement("p");
@@ -285,12 +268,10 @@ function populateNoMeaningFound(selectedText) {
 }
 
 function onSingleClick() {
-	console.log("on single click");
 	var meaningDiv = document.getElementById("dictionaryCardID");
 	if (meaningDiv) {
 		dictionaryPopup.style.display = "none";
 		while (meaningContainer.firstChild) {
-			console.log("removing child");
 			meaningContainer.removeChild(meaningContainer.firstChild);
 		}
 	}
