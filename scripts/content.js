@@ -91,24 +91,22 @@ let isMouseSelectionEnabled = true;
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	console.log("in listner");
-	if (message.variable1) {
-		var receivedVariable = message.variable1;
-		console.log("Received variable from popup:", receivedVariable);
-		// Do something with receivedVariable
-	}
-	if (message.isDblClickEnable) {
-		console.log("dbl click true");
-		isDblClickEnabled = true;
-	} else {
-		console.log("dbl click false");
-		isDblClickEnabled = false;
-	}
-	if (message.isMouseSelectionEnable) {
-		console.log("isMouseSelectionEnable  true");
-		isMouseSelectionEnabled = true;
-	} else {
-		console.log("isMouseSelectionEnable false");
-		isMouseSelectionEnabled = false;
+	if (message.data) {
+		const dataReceived = message.data;
+		if (dataReceived.dblclickToggler) {
+			console.log("dbl click true");
+			isDblClickEnabled = true;
+		} else {
+			console.log("dbl click false");
+			isDblClickEnabled = false;
+		}
+		if (dataReceived.mouseselectionToggler) {
+			console.log("isMouseSelectionEnable  true");
+			isMouseSelectionEnabled = true;
+		} else {
+			console.log("isMouseSelectionEnable false");
+			isMouseSelectionEnabled = false;
+		}
 	}
 });
 
@@ -191,6 +189,7 @@ function dblClickEventHandler(event) {
 }
 
 function mouseUpEventHandler(event) {
+	console.log(isMouseSelectionEnabled);
 	setTimeout(() => {
 		if (!dblClickEventHappend && isMouseSelectionEnabled) {
 			fetchMeaningOfSelected(event);
