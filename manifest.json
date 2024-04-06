@@ -3,6 +3,13 @@
 	"name": "Dictionary",
 	"description": "Just double-click on the word and see the meaning of it!",
 	"version": "1.0",
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": "dictionary_icon1.png"
+	},
+	"background": {
+		"service_worker": "service-worker.js"
+	},
 	"content_scripts": [
 		{
 			"js": ["scripts/content.js"],
@@ -10,14 +17,11 @@
 		}
 	],
 	"permissions": ["storage"],
-	"action": {
-		"default_popup": "popup.html",
-		"default_icon": "dictionary_icon.png"
-	},
+	"host_permissions": ["https://*/*"],
 	"web_accessible_resources": [
 		{
 			"resources": ["popup.js"],
-			"matches": ["https://web-accessible-resources-1.glitch.me/*"]
+			"matches": ["https://*/*"]
 		}
 	]
 }

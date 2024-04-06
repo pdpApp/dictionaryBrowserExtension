@@ -88,23 +88,23 @@ styleElement.textContent = `
 
 let isDblClickEnabled = true;
 let isMouseSelectionEnabled = true;
+(async () => {
+	const { checkboxState } = await chrome.runtime.sendMessage({ fetchFeatures: "checkboxes" });
+	isDblClickEnabled = checkboxState.dblClickToggler;
+	isMouseSelectionEnabled = checkboxState.mouseSelectionToggler;
+})();
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-	console.log("in listner");
 	if (message.data) {
 		const dataReceived = message.data;
-		if (dataReceived.dblclickToggler) {
-			console.log("dbl click true");
+		if (dataReceived.dblClickToggler) {
 			isDblClickEnabled = true;
 		} else {
-			console.log("dbl click false");
 			isDblClickEnabled = false;
 		}
-		if (dataReceived.mouseselectionToggler) {
-			console.log("isMouseSelectionEnable  true");
+		if (dataReceived.mouseSelectionToggler) {
 			isMouseSelectionEnabled = true;
 		} else {
-			console.log("isMouseSelectionEnable false");
 			isMouseSelectionEnabled = false;
 		}
 	}
