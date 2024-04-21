@@ -189,7 +189,6 @@ function dblClickEventHandler(event) {
 }
 
 function mouseUpEventHandler(event) {
-	console.log(isMouseSelectionEnabled);
 	setTimeout(() => {
 		if (!dblClickEventHappend && isMouseSelectionEnabled) {
 			fetchMeaningOfSelected(event);
@@ -208,6 +207,7 @@ function fetchMeaningOfSelected(event) {
 				// Parse the response as JSON
 				return response.json();
 			})
+
 			.then((respData) => {
 				// Process the JSON respData
 				showMeaningPopup(event);
